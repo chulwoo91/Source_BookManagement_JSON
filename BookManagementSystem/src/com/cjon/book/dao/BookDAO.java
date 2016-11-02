@@ -18,6 +18,7 @@ public class BookDAO {
 		//추가적으로 간단한 library를 이용해 DB처리를 한다.
 		//1. Driver loading(이미 설정이 되어있어서 따로 해줄 필요가 없다.)
 		//2. Connection 생성
+		//Rasdfasdf
 		Connection con = DBTemplate.getConnection();
 		PreparedStatement pstmt=null;
 		ResultSet rs=null;
