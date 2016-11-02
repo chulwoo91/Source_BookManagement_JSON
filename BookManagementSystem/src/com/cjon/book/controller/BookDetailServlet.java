@@ -12,16 +12,16 @@ import javax.servlet.http.HttpServletResponse;
 import com.cjon.book.service.BookService;
 
 /**
- * Servlet implementation class BookUpdateServlet
+ * Servlet implementation class BookDetailServlet
  */
-@WebServlet("/bookUpdate")
-public class BookUpdateServlet extends HttpServlet {
+@WebServlet("/bookDetail")
+public class BookDetailServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public BookUpdateServlet() {
+    public BookDetailServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -30,15 +30,16 @@ public class BookUpdateServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
 		String isbn=request.getParameter("isbn");
-		String price=request.getParameter("price");
-		String title=request.getParameter("title");
-		String author=request.getParameter("author");
+		String page=request.getParameter("page");
+		String date=request.getParameter("date");
+		String translator=request.getParameter("translator");
+		String supplement=request.getParameter("supplement");
+		String publisher=request.getParameter("publisher");
 		String callback=request.getParameter("callback");
 		
 		BookService service=new BookService();
-		boolean result=service.updateBook(isbn, price, title, author);
+		String result=service.bookDetail(isbn,page, date, translator, supplement, publisher);
 		
 		response.setContentType("text/plain; charset=utf8");
 		PrintWriter out=response.getWriter();

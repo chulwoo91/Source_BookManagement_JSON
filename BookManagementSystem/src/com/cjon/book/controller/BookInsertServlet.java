@@ -12,16 +12,16 @@ import javax.servlet.http.HttpServletResponse;
 import com.cjon.book.service.BookService;
 
 /**
- * Servlet implementation class BookUpdateServlet
+ * Servlet implementation class BookInsertServlet
  */
-@WebServlet("/bookUpdate")
-public class BookUpdateServlet extends HttpServlet {
+@WebServlet("/bookInsert")
+public class BookInsertServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public BookUpdateServlet() {
+    public BookInsertServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -30,7 +30,6 @@ public class BookUpdateServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
 		String isbn=request.getParameter("isbn");
 		String price=request.getParameter("price");
 		String title=request.getParameter("title");
@@ -38,14 +37,13 @@ public class BookUpdateServlet extends HttpServlet {
 		String callback=request.getParameter("callback");
 		
 		BookService service=new BookService();
-		boolean result=service.updateBook(isbn, price, title, author);
+		boolean result=service.bookInsert(isbn, price, title, author);
 		
 		response.setContentType("text/plain; charset=utf8");
 		PrintWriter out=response.getWriter();
 		out.println(callback + "(" + result + ")");
 		out.flush();
 		out.close();
-		
 	}
 
 	/**

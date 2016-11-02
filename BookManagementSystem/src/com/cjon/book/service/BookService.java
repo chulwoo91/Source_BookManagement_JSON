@@ -15,11 +15,28 @@ public class BookService {
 		return result;
 	}
 
-	public boolean updateBook(String isbn, String price) {
+	public boolean updateBook(String isbn, String price, String title, String author) {
 	
 		BookDAO dao=new BookDAO();
-		boolean result=dao.update(isbn, price);
+		boolean result=dao.update(isbn, price, title, author);
 		return result;
 	}
 
+	public boolean bookDelete(String isbn){
+		BookDAO dao=new BookDAO();
+		boolean result=dao.delete(isbn);
+		return result;
+	}
+	
+	public boolean bookInsert(String isbn, String price, String title, String author){
+		BookDAO dao=new BookDAO();
+		boolean result=dao.insert(isbn, price, title, author);
+		return result;
+	}
+
+	public String bookDetail(String isbn, String page, String date, String translator, String supplement, String publisher) {
+		BookDAO dao=new BookDAO();
+		String result=dao.detail(isbn, page, date, translator, supplement, publisher);
+		return result;
+	}
 }
