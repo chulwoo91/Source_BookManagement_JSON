@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import javax.servlet.http.HttpSession;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -175,6 +177,67 @@ public class BookDAO {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
+		}finally{
+			DBTemplate.close(rs);
+			DBTemplate.close(pstmt);
+			DBTemplate.close(con);			
+		}
+		return result;
+	}
+
+	public boolean enroll(String user, String pass) {
+		Connection con = DBTemplate.getConnection();
+		PreparedStatement pstmt=null;
+
+		boolean result=false;
+		
+		try {
+			String sql="insert into member (id, pw) value (?,?)";
+			pstmt=con.prepareStatement(sql);
+			pstmt.setString(1, user);
+			pstmt.setString(2, pass);
+			
+			int count=pstmt.executeUpdate();
+			//결과값은 영향을 받은 레코드의 수
+			
+			if(count==1){
+				result=true;
+				//정상처리이기 때문에 commit
+				DBTemplate.commit(con);
+			}else{
+				DBTemplate.rollback(con);
+			}
+			
+		} catch (Exception e) {
+			System.out.println(e);
+		}finally{
+			DBTemplate.close(pstmt);
+			DBTemplate.close(con);			
+		}
+		return result;
+	}
+
+	public boolean login(String user, String pass) {
+		Connection con = DBTemplate.getConnection();
+		PreparedStatement pstmt=null;
+		ResultSet rs= null;
+		boolean result=false;
+		
+		try {
+			String sql="select id, pw from member where id=? and pw=?";
+			pstmt=con.prepareStatement(sql);
+			pstmt.setString(1, user);
+			pstmt.setString(2, pass);
+			
+			rs=pstmt.executeQuery();
+			//결과값은 영향을 받은 레코드의 수
+
+			while(rs.next()) {
+				result=true;
+			}
+			
+		} catch (Exception e) {
+			System.out.println(e);
 		}finally{
 			DBTemplate.close(rs);
 			DBTemplate.close(pstmt);

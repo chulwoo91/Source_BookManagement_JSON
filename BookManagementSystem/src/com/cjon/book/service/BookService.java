@@ -39,4 +39,16 @@ public class BookService {
 		String result=dao.detail(isbn, page, date, translator, supplement, publisher);
 		return result;
 	}
+
+	public boolean userEnroll(String user, String pass) {
+		BookDAO dao=new BookDAO();
+		boolean result=dao.enroll(user, pass);
+		return result;
+	}
+
+	public boolean logIn(String user, String pass) {
+		BookDAO dao=new BookDAO();
+		boolean result=dao.login(user, pass);
+		return result;
+	}
 }
