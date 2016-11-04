@@ -8,21 +8,20 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import com.cjon.book.service.BookService;
 
 /**
- * Servlet implementation class UserLogoutServlet
+ * Servlet implementation class ReviewSearchServlet
  */
-@WebServlet("/logOut")
-public class UserLogoutServlet extends HttpServlet {
+@WebServlet("/reviewSearch")
+public class ReviewSearchServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public UserLogoutServlet() {
+    public ReviewSearchServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -31,26 +30,18 @@ public class UserLogoutServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String keyword=request.getParameter("keyword");
 		String callback=request.getParameter("callback");
-		boolean result=false;
 		
-		HttpSession session=request.getSession(true);
-		
-		String id = (String)session.getAttribute("user");
-		
-		if( id == null ) {
-			
-		}
-		else{
-	        session.invalidate();
-	        result=true;
-		}
+		BookService service=new BookService();
+		String result=service.reviewList(keyword);
 		
 		response.setContentType("text/plain; charset=utf8");
-		PrintWriter out = response.getWriter();
+		PrintWriter out=response.getWriter();
 		out.println(callback + "(" + result + ")");
 		out.flush();
-		out.close(); 
+		out.close();
+		
 	}
 
 	/**

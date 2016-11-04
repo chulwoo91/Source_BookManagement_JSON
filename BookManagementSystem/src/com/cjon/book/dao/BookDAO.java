@@ -246,4 +246,160 @@ public class BookDAO {
 		return result;
 	}
 
+	public boolean reviewInsert(String isbn, String id, String title, String review) {
+		Connection con = DBTemplate.getConnection();
+		PreparedStatement pstmt=null;
+
+		boolean result=false;
+		
+		try {
+			String sql="insert into book_comment (bisbn, cid, ctitle, ctext) value (?,?,?,?)";
+			pstmt=con.prepareStatement(sql);
+			pstmt.setString(1, isbn);
+			pstmt.setString(2, id);
+			pstmt.setString(3, title);
+			pstmt.setString(4, review);
+			
+			
+			int count=pstmt.executeUpdate();
+			//결과값은 영향을 받은 레코드의 수
+			
+			if(count==1){
+				result=true;
+				//정상처리이기 때문에 commit
+				DBTemplate.commit(con);
+			}else{
+				DBTemplate.rollback(con);
+			}
+			
+		} catch (Exception e) {
+			System.out.println(e);
+		}finally{
+			DBTemplate.close(pstmt);
+			DBTemplate.close(con);			
+		}
+		return result;
+	}
+
+	public String reviewbook(String keyword) {
+		Connection con = DBTemplate.getConnection();
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		String result=null;
+		try {	
+			String sql="select b.bisbn, c.cid, b.btitle, c.ctitle, c.ctext from book b join book_comment c on b.bisbn = c.bisbn where b.btitle like ? ";
+			pstmt=con.prepareStatement(sql);
+			pstmt.setString(1, keyword);
+			rs=pstmt.executeQuery();
+			JSONArray arr=new JSONArray();
+			while(rs.next()){
+				JSONObject obj=new JSONObject();
+				obj.put("isbn",  rs.getString("b.bisbn"));
+				obj.put("title",  rs.getString("b.btitle"));
+				obj.put("user",  rs.getString("c.cid"));
+				obj.put("review",  rs.getString("ctext"));
+				arr.add(obj);
+			}
+			result=arr.toJSONString();
+		} catch (Exception e) {
+			System.out.println(e);
+		}finally{
+			DBTemplate.close(rs);
+			DBTemplate.close(pstmt);
+			DBTemplate.close(con);			
+		}
+		return result;
+	}
+
+	public String reviewKW(String keyword) {
+		Connection con = DBTemplate.getConnection();
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		String result=null;
+		try {	
+			String sql="select bisbn, cid, ctitle, ctext from book_comment where ctext like ?";
+			pstmt=con.prepareStatement(sql);
+			pstmt.setString(1,  "%" + keyword + "%");
+			rs=pstmt.executeQuery();
+			JSONArray arr=new JSONArray();
+			while(rs.next()){
+				JSONObject obj=new JSONObject();
+				obj.put("isbn",  rs.getString("bisbn"));
+				obj.put("user",  rs.getString("cid"));
+				obj.put("title",  rs.getString("ctitle"));
+				obj.put("review",  rs.getString("ctext"));
+				arr.add(obj);
+			}
+			result=arr.toJSONString();
+		} catch (Exception e) {
+			System.out.println(e);
+		}finally{
+			DBTemplate.close(rs);
+			DBTemplate.close(pstmt);
+			DBTemplate.close(con);			
+		}
+		return result;
+	}
+
+	public String deleteSearch(String keyword) {
+		Connection con = DBTemplate.getConnection();
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		String result=null;
+		try {	
+			String sql="select bisbn, cid, ctitle, ctext from book_comment where cid like ?";
+			pstmt=con.prepareStatement(sql);
+			pstmt.setString(1, "%" + keyword + "%");
+			rs=pstmt.executeQuery();
+			JSONArray arr=new JSONArray();
+			while(rs.next()){
+				JSONObject obj=new JSONObject();
+				obj.put("isbn",  rs.getString("bisbn"));
+				obj.put("user",  rs.getString("cid"));
+				obj.put("title",  rs.getString("ctitle"));
+				obj.put("review",  rs.getString("ctext"));
+				arr.add(obj);
+			}
+			result=arr.toJSONString();
+		} catch (Exception e) {
+			System.out.println(e);
+		}finally{
+			DBTemplate.close(rs);
+			DBTemplate.close(pstmt);
+			DBTemplate.close(con);			
+		}
+		return result;
+	}
+
+	public boolean deletereview(String isbn) {
+		Connection con = DBTemplate.getConnection();
+		PreparedStatement pstmt=null;
+		
+		boolean result=false;
+		
+		try {
+			String sql="delete from book_comment where bisbn=?";
+			pstmt=con.prepareStatement(sql);
+			pstmt.setString(1, isbn);
+
+			int count=pstmt.executeUpdate();
+			//결과값은 영향을 받은 레코드의 수
+			
+			if(count==1){
+				result=true;
+				//정상처리이기 때문에 commit
+				DBTemplate.commit(con);
+			}else{
+				DBTemplate.rollback(con);
+			}
+			
+		} catch (Exception e) {
+			System.out.println(e);
+		}finally{
+			DBTemplate.close(pstmt);
+			DBTemplate.close(con);			
+		}
+		return result;
+	}
+
 }

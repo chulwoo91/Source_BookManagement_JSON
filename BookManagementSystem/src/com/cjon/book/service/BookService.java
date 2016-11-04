@@ -51,4 +51,35 @@ public class BookService {
 		boolean result=dao.login(user, pass);
 		return result;
 	}
+
+	public boolean reviewInsert(String isbn, String id, String title, String review) {
+		BookDAO dao=new BookDAO();
+		boolean result=dao.reviewInsert(isbn, id, title, review);
+		return result;
+	}
+
+	public String reviewList(String keyword) {
+		BookDAO dao=new BookDAO();
+		String result=dao.reviewbook(keyword);
+		return result;
+	}
+
+	public String reviewKW(String keyword) {
+		BookDAO dao=new BookDAO();
+		String result=dao.reviewKW(keyword);
+		return result;
+	}
+
+	public String deleteSearch(String keyword) {
+		BookDAO dao=new BookDAO();
+		String result=dao.deleteSearch(keyword);
+		return result;
+	}
+
+	public boolean commentDelete(String isbn) {
+		BookDAO dao=new BookDAO();
+		boolean result=dao.deletereview(isbn);
+		return result;
+	}
+
 }
