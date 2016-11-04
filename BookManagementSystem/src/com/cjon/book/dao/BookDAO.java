@@ -402,4 +402,66 @@ public class BookDAO {
 		return result;
 	}
 
+	public boolean loanlogin(String user, String pass) {
+		Connection con = DBTemplate.getConnection();
+		PreparedStatement pstmt=null;
+
+		boolean result=false;
+		
+		try {
+			String sql="insert into book (rent) value (?)";
+			pstmt=con.prepareStatement(sql);
+			pstmt.setString(1, user);
+			
+			int count=pstmt.executeUpdate();
+			//결과값은 영향을 받은 레코드의 수
+			
+			if(count==1){
+				result=true;
+				//정상처리이기 때문에 commit
+				DBTemplate.commit(con);
+			}else{
+				DBTemplate.rollback(con);
+			}
+			
+		} catch (Exception e) {
+			System.out.println(e);
+		}finally{
+			DBTemplate.close(pstmt);
+			DBTemplate.close(con);			
+		}
+		return result;
+	}
+
+	public boolean loanlogout(String user, String pass) {
+		Connection con = DBTemplate.getConnection();
+		PreparedStatement pstmt=null;
+		
+		boolean result=false;
+		
+		try {
+			String sql="delete from book rent where rent=?";
+			pstmt=con.prepareStatement(sql);
+			pstmt.setString(1, user);
+
+			int count=pstmt.executeUpdate();
+			//결과값은 영향을 받은 레코드의 수
+			
+			if(count==1){
+				result=true;
+				//정상처리이기 때문에 commit
+				DBTemplate.commit(con);
+			}else{
+				DBTemplate.rollback(con);
+			}
+			
+		} catch (Exception e) {
+			System.out.println(e);
+		}finally{
+			DBTemplate.close(pstmt);
+			DBTemplate.close(con);			
+		}
+		return result;
+	}
+
 }

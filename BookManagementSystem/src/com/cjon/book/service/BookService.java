@@ -82,4 +82,16 @@ public class BookService {
 		return result;
 	}
 
+	public boolean loanlogIn(String user, String pass) {
+		BookDAO dao=new BookDAO();
+		boolean result=dao.loanlogin(user, pass);
+		return result;
+	}
+
+	public boolean loanlogOut(String user, String pass) {
+		BookDAO dao=new BookDAO();
+		boolean result=dao.loanlogout(user, pass);
+		return result;
+	}
+
 }
