@@ -40,9 +40,9 @@ public class BookService {
 		return result;
 	}
 
-	public boolean userEnroll(String user, String pass) {
+	public boolean userEnroll(String name, String sex, String age, String email, String address, String user, String pass) {
 		BookDAO dao=new BookDAO();
-		boolean result=dao.enroll(user, pass);
+		boolean result=dao.enroll(name, sex, age, email, address, user, pass);
 		return result;
 	}
 
@@ -82,16 +82,23 @@ public class BookService {
 		return result;
 	}
 
-	public boolean loanlogIn(String user, String pass) {
+	public boolean checkLoan(String id, String isbn) {
 		BookDAO dao=new BookDAO();
-		boolean result=dao.loanlogin(user, pass);
+		boolean result=dao.checkLoan(id, isbn);
 		return result;
 	}
 
-	public boolean loanlogOut(String user, String pass) {
+	public boolean returnLoan(String id, String isbn) {
 		BookDAO dao=new BookDAO();
-		boolean result=dao.loanlogout(user, pass);
+		boolean result=dao.returnLoan(id, isbn);
 		return result;
 	}
+
+	public String bookStatus(String id) {
+		BookDAO dao=new BookDAO();
+		String result=dao.bookStatus(id);
+		return result;
+	}
+
 
 }

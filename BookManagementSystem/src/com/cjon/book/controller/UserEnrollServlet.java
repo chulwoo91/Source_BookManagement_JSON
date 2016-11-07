@@ -17,13 +17,17 @@ public class UserEnrollServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-
+		String name=request.getParameter("name");
+		String sex=request.getParameter("sex");
+		String age=request.getParameter("age");
+		String email=request.getParameter("email");
+		String address=request.getParameter("address");
 		String user=request.getParameter("user");
 		String pass=request.getParameter("pass");
 		String callback=request.getParameter("callback");
 		
 		BookService service=new BookService();
-		boolean result=service.userEnroll(user, pass);
+		boolean result=service.userEnroll(name, sex, age, email, address, user, pass);
 		
 		
 		

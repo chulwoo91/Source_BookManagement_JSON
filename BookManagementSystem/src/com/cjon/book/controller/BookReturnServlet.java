@@ -8,21 +8,20 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import com.cjon.book.service.BookService;
 
 /**
- * Servlet implementation class BookLoanServlet
+ * Servlet implementation class BookReturnServlet
  */
-@WebServlet("/bookLoan")
-public class BookLoanServlet extends HttpServlet {
+@WebServlet("/bookReturn")
+public class BookReturnServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public BookLoanServlet() {
+    public BookReturnServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -36,14 +35,13 @@ public class BookLoanServlet extends HttpServlet {
 		String callback=request.getParameter("callback");
 		
 		BookService service=new BookService();
-		boolean result=service.checkLoan(id, isbn);
+		boolean result=service.returnLoan(id, isbn);
 		
 		response.setContentType("text/plain; charset=utf8");
 		PrintWriter out=response.getWriter();
 		out.println(callback + "(" + result +")");
 		out.flush();
 		out.close();
-		
 	}
 
 	/**

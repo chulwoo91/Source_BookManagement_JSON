@@ -25,7 +25,7 @@ public class BookDAO {
 		ResultSet rs=null;
 		String result=null;
 		try {
-			String sql="select bisbn, bimgurl, btitle, bauthor, bprice from book where btitle like ?";
+			String sql="select bisbn, bimgurl, btitle, bauthor, bprice, rent from book where btitle like ?";
 			pstmt=con.prepareStatement(sql);
 			pstmt.setString(1,  "%" + keyword + "%");
 			rs=pstmt.executeQuery();
@@ -37,6 +37,7 @@ public class BookDAO {
 				obj.put("title",  rs.getString("btitle"));
 				obj.put("author",  rs.getString("bauthor"));
 				obj.put("price",  rs.getString("bprice"));
+				obj.put("rent",  rs.getString("rent"));
 				arr.add(obj);
 			}
 			result=arr.toJSONString();
@@ -185,17 +186,22 @@ public class BookDAO {
 		return result;
 	}
 
-	public boolean enroll(String user, String pass) {
+	public boolean enroll(String name, String sex, String age, String email, String address, String user, String pass) {
 		Connection con = DBTemplate.getConnection();
 		PreparedStatement pstmt=null;
 
 		boolean result=false;
 		
 		try {
-			String sql="insert into member (id, pw) value (?,?)";
+			String sql="insert into member (id, pw, name, sex, age, email, address) value (?,?,?,?,?,?,?)";
 			pstmt=con.prepareStatement(sql);
 			pstmt.setString(1, user);
 			pstmt.setString(2, pass);
+			pstmt.setString(3, name);
+			pstmt.setString(4, sex);
+			pstmt.setInt(5, Integer.parseInt(age));
+			pstmt.setString(6, email);
+			pstmt.setString(7, address);
 			
 			int count=pstmt.executeUpdate();
 			//결과값은 영향을 받은 레코드의 수
@@ -289,7 +295,7 @@ public class BookDAO {
 		try {	
 			String sql="select b.bisbn, c.cid, b.btitle, c.ctitle, c.ctext from book b join book_comment c on b.bisbn = c.bisbn where b.btitle like ? ";
 			pstmt=con.prepareStatement(sql);
-			pstmt.setString(1, keyword);
+			pstmt.setString(1, "%" + keyword + "%");
 			rs=pstmt.executeQuery();
 			JSONArray arr=new JSONArray();
 			while(rs.next()){
@@ -402,17 +408,18 @@ public class BookDAO {
 		return result;
 	}
 
-	public boolean loanlogin(String user, String pass) {
+	public boolean checkLoan(String id, String isbn) {
 		Connection con = DBTemplate.getConnection();
 		PreparedStatement pstmt=null;
-
+		
 		boolean result=false;
 		
 		try {
-			String sql="insert into book (rent) value (?)";
+			String sql="update book set rent=? where bisbn=?";
 			pstmt=con.prepareStatement(sql);
-			pstmt.setString(1, user);
-			
+			pstmt.setString(1, id);
+			pstmt.setString(2, isbn);
+
 			int count=pstmt.executeUpdate();
 			//결과값은 영향을 받은 레코드의 수
 			
@@ -433,16 +440,16 @@ public class BookDAO {
 		return result;
 	}
 
-	public boolean loanlogout(String user, String pass) {
+	public boolean returnLoan(String id, String isbn) {
 		Connection con = DBTemplate.getConnection();
 		PreparedStatement pstmt=null;
 		
 		boolean result=false;
 		
 		try {
-			String sql="delete from book rent where rent=?";
+			String sql="update book set rent=null where bisbn=?";
 			pstmt=con.prepareStatement(sql);
-			pstmt.setString(1, user);
+			pstmt.setString(1, isbn);
 
 			int count=pstmt.executeUpdate();
 			//결과값은 영향을 받은 레코드의 수
@@ -463,5 +470,38 @@ public class BookDAO {
 		}
 		return result;
 	}
+
+	public String bookStatus(String id) {
+		Connection con = DBTemplate.getConnection();
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		String result=null;
+		try {
+			String sql="select bisbn, bimgurl, btitle, bauthor, bprice, rent from book where rent=?";
+			pstmt=con.prepareStatement(sql);
+			pstmt.setString(1, id);
+			rs=pstmt.executeQuery();
+			JSONArray arr=new JSONArray();
+			while(rs.next()){
+				JSONObject obj=new JSONObject();
+				obj.put("isbn",  rs.getString("bisbn"));
+				obj.put("img",  rs.getString("bimgurl"));
+				obj.put("title",  rs.getString("btitle"));
+				obj.put("author",  rs.getString("bauthor"));
+				obj.put("price",  rs.getString("bprice"));
+				obj.put("rent",  rs.getString("rent"));
+				arr.add(obj);
+			}
+			result=arr.toJSONString();
+		} catch (Exception e) {
+			System.out.println(e);
+		}finally{
+			DBTemplate.close(rs);
+			DBTemplate.close(pstmt);
+			DBTemplate.close(con);			
+		}
+		return result;
+	}
+
 
 }
