@@ -293,9 +293,9 @@ public class BookDAO {
 		ResultSet rs=null;
 		String result=null;
 		try {	
-			String sql="select b.bisbn, c.cid, b.btitle, c.ctitle, c.ctext from book b join book_comment c on b.bisbn = c.bisbn where b.btitle like ? ";
+			String sql="select b.bisbn, c.cid, b.btitle, c.ctitle, c.ctext from book b join book_comment c on b.bisbn = c.bisbn where b.btitle=? ";
 			pstmt=con.prepareStatement(sql);
-			pstmt.setString(1, "%" + keyword + "%");
+			pstmt.setString(1, keyword);
 			rs=pstmt.executeQuery();
 			JSONArray arr=new JSONArray();
 			while(rs.next()){
